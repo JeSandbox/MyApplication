@@ -44,8 +44,6 @@ function createTable(data) {
     cell2.innerHTML = row.PRICE;
     cell2.style.textAlign = "right";
   });
-  //clear div holding the table
-  document.getElementById("divFruits").innerHTML = "";
 
   //add the table into the div element
   document.getElementById("divFruits").append(tblFruits);
@@ -80,6 +78,9 @@ function addNewItem() {
     //clear the textbox
     document.getElementById("txtItem").value = "";
     document.getElementById("txtPrice").value = "";
+
+    //clear div holding the table
+    document.getElementById("divFruits").innerHTML = "";
 
     //load table again
     init();
