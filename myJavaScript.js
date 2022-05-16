@@ -3,10 +3,12 @@
 const myUrl ="https://script.google.com/macros/s/AKfycbx07fcibom2PHCt86jFPtr78vUdmDvIE90DdEbVZzI75uIAzAzm9qEqsbAwoRaj60c2/exec";
 
 function init() {
-  console.log("ready");
+  
   //fetch request
   fetch(myUrl)
-    .then((res)=> {return res.json()}) //return response object as json
+    .then((res)=>{
+      return res.json();
+    }) //return response object as json
     .then((data)=>{
       createTable(data); //data content we get from the response object
     })
@@ -14,36 +16,23 @@ function init() {
 
 
 function createTable(data) {
-  console.log(data.GoogleSheetData);
+  
   //create HTML element table
   const tblFruits = document.createElement('table');
-
-  //add row
-  var tblRow = tblFruits.insertRow();
-
-  //add cells for item and price
-  var cell1 = tblRow.insertCell(0);
-  var cell2 = tblRow.insertCell(1);
-
-  //set values for cells
-  cell1.innerHTML = "Item";
-  cell2.innerHTML = "Price";
-
-  //align the value to the right
-  cell2.style.textAlign = "right";
+  tblFruits.setAttribute("id","myTable");
+  
+  //add table header
+  addNewCell(tblFruits, "Item","Price");
 
   //loop each object
   data.GoogleSheetData.forEach((row)=>{
 
-    tblRow = tblFruits.insertRow();
+    //add new row
+    addNewCell(tblFruits, row.ITEM, row.PRICE);
 
-    cell1 = tblRow.insertCell(0);
-    cell2 = tblRow.insertCell(1);
-
-    cell1.innerHTML = row.ITEM;
-    cell2.innerHTML = row.PRICE;
-    cell2.style.textAlign = "right";
   });
+  //clear div holding the table
+  document.getElementById("divFruits").innerHTML = "";
 
   //add the table into the div element
   document.getElementById("divFruits").append(tblFruits);
@@ -75,18 +64,36 @@ function addNewItem() {
       body: JSON.stringify({item:newItem,price:newPrice}) // body data type must match "Content-Type" header
     });
 
+    //set table
+    var tblName = document.getElementById("myTable");
+
+    //add row to table
+    addNewCell(tblName, newItem, newPrice);
+    
     //clear the textbox
     document.getElementById("txtItem").value = "";
     document.getElementById("txtPrice").value = "";
 
-    //clear div holding the table
-    document.getElementById("divFruits").innerHTML = "";
-
-    //load table again
-    init();
   }
   else {
     alert("Please fill up all fields");
   }
 
+}
+
+
+function addNewCell(tblName, item1, item2) {
+  //add row
+  var tblRow = tblName.insertRow();
+
+  //add cells for item and price
+  var cell1 = tblRow.insertCell(0);
+  var cell2 = tblRow.insertCell(1);
+
+  //set values for cells
+  cell1.innerHTML = item1;
+  cell2.innerHTML = item2;
+
+  //align the value to the right
+  cell2.style.textAlign = "right";
 }
